@@ -169,16 +169,29 @@ class googleDrive {
       if(parent==undefined){
         return null;
       }
-      let url = 'https://www.googleapis.com/drive/v3/files';
+      const files = [];
+      let pageToken;
+      let obj;
       let params = {'includeItemsFromAllDrives':true,'supportsAllDrives':true};
       params.q = `'${parent}' in parents and trashed = false AND name !='.password'`;
       params.orderBy= 'folder,name,modifiedTime desc';
       params.fields = "nextPageToken, files(id, name, mimeType, size , modifiedTime)";
       params.pageSize = 1000;
-      url += '?'+this.enQuery(params);
-      let requestOption = await this.requestOption();
-      let response = await fetch(url, requestOption);
-      let obj = await response.json();
+
+      do {
+        if (pageToken) {
+            params.pageToken = pageToken;
+        }
+        let url = 'https://www.googleapis.com/drive/v3/files';
+        url += '?'+this.enQuery(params);
+        let requestOption = await this.requestOption();
+        let response = await fetch(url, requestOption);
+        obj = await response.json();
+        files.push(...obj.files);
+        pageToken = obj.nextPageToken;
+      } while (pageToken);
+
+      obj.files = files;
       return obj;
     }
 
