@@ -139,8 +139,21 @@ class googleDrive {
 
     // 通过reqeust cache 来缓存
     async list(path){
+      if (gd.cache == undefined) {
+        gd.cache = {};
+      }
+
+      if (gd.cache[path]) {
+        return gd.cache[path];
+      }
+
       let id = await this.findPathId(path);
-      return this._ls(id);
+      var obj = await this._ls(id);
+      if (obj.files && obj.files.length > 1000) {
+            gd.cache[path] = obj;
+      }
+
+      return obj
     }
 
     async password(path){
