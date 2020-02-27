@@ -76,7 +76,7 @@ async function apiRequest(request) {
           var obj = {};
         }
         console.log(password,obj);
-        if(password != obj.password){
+        if(password.replace("\n", "") != obj.password){
           let html = `{"error": {"code": 401,"message": "password error."}}`;
           return new Response(html,option);
         }
