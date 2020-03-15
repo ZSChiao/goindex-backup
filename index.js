@@ -54,6 +54,9 @@ async function handleRequest(request) {
       }
       let file = await gd.file(path);
       let range = request.headers.get('Range');
+      if (file == undefined){
+        return new Response("", { status: 404 });
+      }
       return gd.down(file.id, range);
     }
 }
@@ -134,6 +137,9 @@ class googleDrive {
       let response = await fetch(url, requestOption);
       let obj = await response.json();
       console.log(obj);
+      if (obj.files == undefined){
+        return new Response("", { status: 404 });
+      }
       return obj.files[0];
     }
 
