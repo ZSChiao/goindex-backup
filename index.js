@@ -50,18 +50,24 @@ async function handleRequest(request) {
       try {
         await gd.list(path);
       } catch (e) {
+        return new Response("", { status: 404 }); // if path: /notexist/
+      }
+      return new Response(html, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+    } else {
+      if (path.split('/').pop().toLowerCase() == ".password") {
         return new Response("", { status: 404 });
       }
-      return new Response(html,{status:200,headers:{'Content-Type':'text/html; charset=utf-8'}});
-    }else{
-      if(path.split('/').pop().toLowerCase() == ".password"){
-         return new Response("",{status:404});
+      try {
+        await gd.file(path);
+      } catch (e) {
+        return new Response("", { status: 404 }); // if path: /notexist/notexist
       }
       let file = await gd.file(path);
-      let range = request.headers.get('Range');
       if (file == undefined){
-        return new Response("", { status: 404 });
+        return new Response("", { status: 404 }); // if path: /exist/notexist
       }
+      
+      let range = request.headers.get('Range');
       return gd.down(file.id, range);
     }
 }
@@ -142,9 +148,6 @@ class googleDrive {
       let response = await fetch(url, requestOption);
       let obj = await response.json();
       console.log(obj);
-      if (obj.files == undefined){
-        return new Response("", { status: 404 });
-      }
       return obj.files[0];
     }
 
