@@ -47,6 +47,11 @@ async function handleRequest(request) {
     let action = url.searchParams.get('a');
 
     if(path.substr(-1) == '/' || action != null){
+      try {
+        await gd.list(path);
+      } catch (e) {
+        return new Response("", { status: 404 });
+      }
       return new Response(html,{status:200,headers:{'Content-Type':'text/html; charset=utf-8'}});
     }else{
       if(path.split('/').pop().toLowerCase() == ".password"){
