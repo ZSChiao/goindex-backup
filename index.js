@@ -46,11 +46,16 @@ async function handleRequest(request) {
     let path = url.pathname;
     let action = url.searchParams.get('a');
 
-    if(path.substr(-1) == '/' || action != null){
+    if(path.substr(-1) == '/'){
       try {
         await gd.list(path);
       } catch (e) {
         return new Response("", { status: 404 }); // if path: /notexist/
+      }
+      return new Response(html, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+    } else if(action != null){
+      if (await gd.file(path) == undefined){
+        return new Response(html404, { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
       }
       return new Response(html, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     } else {
