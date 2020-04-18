@@ -1,3 +1,5 @@
+// https://github.com/donwa/goindex/blob/master/使用及免责协议.md
+
 var authConfig = {
     "siteName": "GoIndex", // 网站名称
     "root_pass": "index",  // 根目录密码，优先于.password
