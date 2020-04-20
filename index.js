@@ -149,11 +149,15 @@ class googleDrive {
       let url = 'https://www.googleapis.com/drive/v3/files';
       let params = {'includeItemsFromAllDrives':true,'supportsAllDrives':true};
       params.q = `'${parent}' in parents and name = '${name}' andtrashed = false`;
-      params.fields = "files(id, name, mimeType, size ,createdTime, modifiedTime, iconLink, thumbnailLink)";
+      params.fields = "files(id, name, mimeType, size ,createdTime, modifiedTime, iconLink, thumbnailLink, shortcutDetails)";
       url += '?'+this.enQuery(params);
       let requestOption = await this.requestOption();
       let response = await fetch(url, requestOption);
       let obj = await response.json();
+      if (obj.files && obj.files[0] && obj.files[0].mimeType == 'application/vnd.google-apps.shortcut'){
+        obj.files[0].id = obj.files[0].shortcutDetails.targetId;
+        obj.files[0].mimeType = obj.files[0].shortcutDetails.targetMimeType;
+      }
       console.log(obj);
       return obj.files[0];
     }
@@ -209,7 +213,7 @@ class googleDrive {
       let params = {'includeItemsFromAllDrives':true,'supportsAllDrives':true};
       params.q = `'${parent}' in parents and trashed = false AND name !='.password'`;
       params.orderBy= 'folder,name,modifiedTime desc';
-      params.fields = "nextPageToken, files(id, name, mimeType, size , modifiedTime)";
+      params.fields = "nextPageToken, files(id, name, mimeType, size , modifiedTime, shortcutDetails)";
       params.pageSize = 1000;
 
       do {
@@ -221,6 +225,12 @@ class googleDrive {
         let requestOption = await this.requestOption();
         let response = await fetch(url, requestOption);
         obj = await response.json();
+        obj.files.forEach(file => {
+          if (file && file.mimeType == 'application/vnd.google-apps.shortcut') {
+            file.id = file.shortcutDetails.targetId;
+            file.mimeType = file.shortcutDetails.targetMimeType;
+          }
+        });
         files.push(...obj.files);
         pageToken = obj.nextPageToken;
       } while (pageToken);
@@ -262,13 +272,18 @@ class googleDrive {
 
       let url = 'https://www.googleapis.com/drive/v3/files';
       let params = {'includeItemsFromAllDrives':true,'supportsAllDrives':true};
-      params.q = `'${parent}' in parents and mimeType = 'application/vnd.google-apps.folder' and name = '${name}'  and trashed = false`;
-      params.fields = "nextPageToken, files(id, name, mimeType)";
+      params.q = `'${parent}' in parents and (mimeType = 'application/vnd.google-apps.folder' or mimeType = 'application/vnd.google-apps.shortcut') and name = '${name}'  and trashed = false`;
+      params.fields = "nextPageToken, files(id, name, mimeType, shortcutDetails)";
       url += '?'+this.enQuery(params);
       let requestOption = await this.requestOption();
       let response = await fetch(url, requestOption);
       let obj = await response.json();
       if(obj.files[0] == undefined){
+        return null;
+      }
+      if (obj.files[0].mimeType == 'application/vnd.google-apps.shortcut' && obj.files[0].shortcutDetails.targetMimeType == 'application/vnd.google-apps.folder') {
+        obj.files[0].id = obj.files[0].shortcutDetails.targetId;
+      } else if (obj.files[0].mimeType == 'application/vnd.google-apps.shortcut' && obj.files[0].shortcutDetails.targetMimeType != 'application/vnd.google-apps.folder'){
         return null;
       }
       return obj.files[0].id;
