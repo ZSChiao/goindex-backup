@@ -4,6 +4,7 @@
 - 【可选】首先到 GitHub Fork一份 Goindex 的代码。
 - 登录CF，打开workers，选中项目修改原代码部分的一行即可。具体操作 —— 找到以下代码，一般是在 21行/23行 。
 
+![请看图]（https://carbon.now.sh/70b70c76-0e7d-455a-9f56-8acb3ecac99f）
 
 
 
