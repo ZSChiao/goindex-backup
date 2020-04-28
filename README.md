@@ -4,7 +4,7 @@
 - 【可选】首先到 GitHub Fork一份 Goindex 的代码。
 - 登录CF，打开workers，选中项目修改原代码部分的一行即可。具体操作如下 —— 找到以下代码，一般是在 21行/23行 。
 
-![修改细节]（https://github.com/ZSChiao/goindex-backup/blob/master/%E8%A7%A3%E5%86%B3%E7%BD%91%E9%A1%B5%E6%89%93%E4%B8%8D%E5%BC%80%E7%9A%84%E9%97%AE%E9%A2%98/CF%E4%BB%A3%E7%A0%81%E4%BF%AE%E6%94%B9.png）
+![]（解决网页打不开的问题/CF代码修改.png）
 
 ## 另外我发现 goindex 现在的版本可以看 GD 快捷方式的文件了，这样就可以把别人共享的文件直接创建快捷方式，在自己的网页看，非常 nice 。
 
