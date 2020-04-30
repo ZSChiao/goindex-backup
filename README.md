@@ -5,6 +5,7 @@
 - 登录CF，打开workers，选中项目修改原代码部分的一行即可。具体操作如下 —— 找到以下代码，一般是在 21行/23行 。
 
 ![cf代码修改细节](https://ae01.alicdn.com/kf/U324911b4bfea4f5bbd01d83026575b51d.png)
+！图片加载不出来可直接访问：https://ae01.alicdn.com/kf/U324911b4bfea4f5bbd01d83026575b51d.png
 
 ### 另外我发现 goindex 现在的版本可以看 GD 快捷方式的文件了，这样就可以把别人共享的文件直接创建快捷方式，在自己的网页看，非常 nice 。
 
